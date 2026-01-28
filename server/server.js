@@ -1,8 +1,11 @@
 // Load environment variables
 require("dotenv").config();
 
+// Database connection
+const connectDB = require("./config/db");
+connectDB();
+
 const express = require("express");
-const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -19,17 +22,6 @@ const shopSearchRouter = require("./routes/shop/search-routes");
 const shopReviewRouter = require("./routes/shop/review-routes");
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
-
-// --------------------
-// Database Connection
-// --------------------
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((error) => {
-    console.error("❌ MongoDB connection error:", error);
-    process.exit(1);
-  });
 
 // --------------------
 // App Initialization
@@ -76,7 +68,7 @@ app.use("/api/shop/review", shopReviewRouter);
 app.use("/api/common/feature", commonFeatureRouter);
 
 // --------------------
-// Health Check (optional but professional)
+// Health Check
 // --------------------
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", uptime: process.uptime() });
